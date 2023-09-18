@@ -1,3 +1,4 @@
+'use strict'
 function updateNotes() {
   const NOTESDATA = JSON.parse(localStorage.getItem("NOTES"));
   const NOTE_LIST = document.getElementById("list-notes");
