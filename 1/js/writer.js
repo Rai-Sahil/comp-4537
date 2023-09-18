@@ -8,7 +8,7 @@ const NOTE_LIST = document.getElementById("list-notes");
 document.addEventListener("DOMContentLoaded", () => {
   const updateTime = () => {
     const currentTime = new Date();
-    document.getElementById("time").textContent = `Current Time: ${timeString}`;
+    document.getElementById("time").textContent = ` ${currentTime.getHours()} : ${currentTime.getMinutes()} : ${currentTime.getSeconds()}`;
   };
 
   const updateLocalStorage = () => {
