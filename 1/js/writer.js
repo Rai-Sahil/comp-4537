@@ -91,8 +91,8 @@ note_form.addEventListener("submit", (e) => {
 
 function Note(bodyText) {
   this.bodyText = bodyText;
-  this.buttonText = "❌";
-  this.textarea = null;
   this.removeButton = null;
+  this.buttonText = "Remove Note";
+  this.textarea = null;
 }
 
