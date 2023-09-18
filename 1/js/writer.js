@@ -8,22 +8,15 @@ const NOTE_LIST = document.getElementById("list-notes");
 document.addEventListener("DOMContentLoaded", () => {
   const updateTime = () => {
     const currentTime = new Date();
-    // Create a string in the format dd/mm/yyyy hh:mm:ss
-    const timeString = currentTime.toLocaleString();
-    // Update the HTML element with the current time
     document.getElementById("time").textContent = `Current Time: ${timeString}`;
   };
 
   const updateLocalStorage = () => {
-    // Assuming NOTES is an object you want to store in local storage
     localStorage.setItem("NOTES", JSON.stringify(NOTES));
   };
 
-  // Call both functions initially
   updateTime();
   updateLocalStorage();
-
-  // Set up an interval to call both functions every 2 seconds
   setInterval(() => {
     updateTime();
     updateLocalStorage();
@@ -52,8 +45,7 @@ for (const note in NOTES) {
   });
 
   NOTES[note].removeButton = document.createElement("button");
-  NOTES[note].removeButton.innerText = NOTES[note].buttonText; // You can use any trash icon you prefer
-  // Add a click event listener to the trash icon to remove the note
+  NOTES[note].removeButton.innerText = NOTES[note].buttonText;
   NOTES[note].removeButton.addEventListener("click", () => {
     removeNote({ bodyText: NOTES[note].bodyText });
     container.remove();
@@ -84,8 +76,7 @@ note_form.addEventListener("submit", (e) => {
   });
 
   newNote.removeButton = document.createElement("button");
-  newNote.removeButton.innerText = newNote.buttonText; // You can use any trash icon you prefer
-  // Add a click event listener to the trash icon to remove the note
+  newNote.removeButton.innerText = newNote.buttonText;
   newNote.removeButton.addEventListener("click", () => {
     removeNote({ bodyText: newNote.bodyText });
     container.remove();
@@ -100,8 +91,8 @@ note_form.addEventListener("submit", (e) => {
 
 function Note(bodyText) {
   this.bodyText = bodyText;
-  this.buttonText = "🗑️";
-  this.textarea = null; // Initialize textarea as null
-  this.removeButton = null; // Initialize button as null
+  this.buttonText = "❌";
+  this.textarea = null;
+  this.removeButton = null;
 }
 
