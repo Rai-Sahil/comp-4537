@@ -1,93 +1,107 @@
-'use strict'
+"use strict";
 
-const noteModels = JSON.parse(localStorage.getItem("notes")) || [];
+const NOTES = JSON.parse(localStorage.getItem("NOTES")) || [];
 
-const noteList = document.getElementById("list-notes");
+// Get references
+const NOTE_LIST = document.getElementById("list-notes");
 
 document.addEventListener("DOMContentLoaded", () => {
-    const updateTime = () => {
-        const currentTime = new Date();
-        document.getElementById("time").textContent = `Last Fetch -> ${currentTime.getHours()} : ${currentTime.getMinutes()} : ${currentTime.getSeconds()}`;
-    };
+  const updateTime = () => {
+    const currentTime = new Date();
+    // Create a string in the format dd/mm/yyyy hh:mm:ss
+    const timeString = currentTime.toLocaleString();
+    // Update the HTML element with the current time
+    document.getElementById("time").textContent = `Current Time: ${timeString}`;
+  };
 
-    const updateLocalStorage = () => {
-        localStorage.setItem("notes", JSON.stringify(noteModels));
-    };
+  const updateLocalStorage = () => {
+    // Assuming NOTES is an object you want to store in local storage
+    localStorage.setItem("NOTES", JSON.stringify(NOTES));
+  };
 
+  // Call both functions initially
+  updateTime();
+  updateLocalStorage();
+
+  // Set up an interval to call both functions every 2 seconds
+  setInterval(() => {
     updateTime();
     updateLocalStorage();
-
-    setInterval(() => {
-        updateTime();
-        updateLocalStorage();
-    }, 2000);
+  }, 2000);
 });
 
-const createNoteModel = ({ bodyText }) => {
-    const noteModel = new NoteModel(bodyText);
-    noteModels.push(noteModel);
-    return noteModel;
+const createNote = ({ bodyText }) => {
+  const note = new Note(bodyText);
+  NOTES.push(note);
+  return note;
 };
 
-const removeNoteModel = ({ bodyText }) => {
-    const noteIndex = noteModels.findIndex((noteModel) => noteModel.bodyText === bodyText);
-    if (noteIndex !== -1) {
-        noteModels.splice(noteIndex, 1);
-    }
+const removeNote = ({ bodyText }) => {
+  const noteIndex = NOTES.findIndex((note) => note.bodyText === bodyText);
+  noteIndex !== -1 ? NOTES.splice(noteIndex, 1) : null;
 };
 
-for (const index in noteModels) {
-    const noteModel = noteModels[index];
-    noteModel.textarea = document.createElement("textarea");
-    noteModel.textarea.value = noteModel.bodyText;
-    noteModel.textarea.addEventListener("input", (e) => {
-        noteModel.bodyText = e.target.value;
-    });
+for (const note in NOTES) {
+  NOTES[note].textarea = document.createElement("textarea");
+  NOTES[note].textarea.value = NOTES[note].bodyText;
+  NOTES[note].textarea.addEventListener("input", (e) => {
+    const noteIndex = NOTES.findIndex(
+      (note) => note.bodyText === NOTES[note].bodyText
+    );
+    NOTES[noteIndex].bodyText = e.target.value;
+  });
 
-    noteModel.removeButton = document.createElement("button");
-    noteModel.removeButton.innerText = noteModel.buttonText;
-    noteModel.removeButton.addEventListener("click", () => {
-        removeNoteModel({ bodyText: noteModel.bodyText });
-        container.remove();
-    });
+  NOTES[note].removeButton = document.createElement("button");
+  NOTES[note].removeButton.innerText = NOTES[note].buttonText; // You can use any trash icon you prefer
+  // Add a click event listener to the trash icon to remove the note
+  NOTES[note].removeButton.addEventListener("click", () => {
+    removeNote({ bodyText: NOTES[note].bodyText });
+    container.remove();
+  });
 
-    const container = document.createElement("div");
+  const container = document.createElement("div");
 
-    container.appendChild(noteModel.textarea);
-    container.appendChild(noteModel.removeButton);
-    noteList.appendChild(container);
+  container.appendChild(NOTES[note].textarea);
+  container.appendChild(NOTES[note].removeButton);
+  NOTE_LIST.appendChild(container);
 }
 
-const noteForm = document.getElementById("note-form");
-noteForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const noteText = document.getElementById("noteText");
-    const newNoteModel = createNoteModel({ bodyText: noteText.value });
-    noteText.value = "";
+const note_form = document.getElementById("note-form");
+note_form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const noteText = document.getElementById("noteText");
+  const newNote = createNote({ bodyText: noteText.value });
+  noteText.value = "";
 
-    newNoteModel.textarea = document.createElement("textarea");
-    newNoteModel.textarea.value = newNoteModel.bodyText;
-    newNoteModel.textarea.addEventListener("input", (e) => {
-        newNoteModel.bodyText = e.target.value;
-    });
+  newNote.textarea = document.createElement("textarea");
 
-    newNoteModel.removeButton = document.createElement("button");
-    newNoteModel.removeButton.innerText = newNoteModel.buttonText;
-    newNoteModel.removeButton.addEventListener("click", () => {
-        removeNoteModel({ bodyText: newNoteModel.bodyText });
-        container.remove();
-    });
+  newNote.textarea.value = newNote.bodyText;
+  newNote.textarea.addEventListener("input", (e) => {
+    const noteIndex = NOTES.findIndex(
+      (note) => note.bodyText === newNote.bodyText
+    );
+    NOTES[noteIndex].bodyText = e.target.value;
+  });
 
-    const container = document.createElement("div");
+  newNote.removeButton = document.createElement("button");
+  newNote.removeButton.innerText = newNote.buttonText; // You can use any trash icon you prefer
+  // Add a click event listener to the trash icon to remove the note
+  newNote.removeButton.addEventListener("click", () => {
+    removeNote({ bodyText: newNote.bodyText });
+    container.remove();
+  });
 
-    container.appendChild(newNoteModel.textarea);
-    container.appendChild(newNoteModel.removeButton);
-    noteList.appendChild(container);
+  const container = document.createElement("div");
+
+  container.appendChild(newNote.textarea);
+  container.appendChild(newNote.removeButton);
+  NOTE_LIST.appendChild(container);
 });
 
-function NoteModel(bodyText) {
-    this.bodyText = bodyText;
-    this.buttonText = "Remove Note";
-    this.textarea = null;
-    this.removeButton = null;
+function Note(bodyText) {
+  this.bodyText = bodyText;
+  this.buttonText = "🗑️";
+  this.textarea = null; // Initialize textarea as null
+  this.removeButton = null; // Initialize button as null
 }
+
