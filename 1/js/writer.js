@@ -1,3 +1,4 @@
+'use strict'
 function NoteModel(bodyText) {
     this.bodyText = bodyText;
     this.buttonText = "Remove Note";
