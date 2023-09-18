@@ -1,58 +1,91 @@
-// writer.js
+function NoteModel(bodyText) {
+    this.bodyText = bodyText;
+    this.buttonText = "Remove Note";
+    this.textarea = null;
+    this.removeButton = null;
+}
 
-// Function to initialize the writer page
-function initWriterPage() {
-    // Retrieve existing notes from local storage
-    const existingNotes = JSON.parse(localStorage.getItem('notes')) || [];
+const noteModels = JSON.parse(localStorage.getItem("notes")) || [];
 
-    const notesContainer = document.getElementById('notes-container');
-    const addBtn = document.getElementById('add-button');
+const noteList = document.getElementById("list-notes");
 
-    // Populate text areas with existing notes
-    existingNotes.forEach((note, index) => {
-        const textarea = createNoteTextarea(note.text);
-        notesContainer.appendChild(textarea);
-    });
-
-    // Add a new note when the "Add Note" button is clicked
-    addBtn.addEventListener('click', () => {
-        const textarea = createNoteTextarea('');
-        notesContainer.appendChild(textarea);
-    });
-
-    // Update the last saved time
-    const lastSaved = document.getElementById('last-saved');
-    setInterval(() => {
+document.addEventListener("DOMContentLoaded", () => {
+    const updateTime = () => {
         const currentTime = new Date();
-        lastSaved.textContent = 'Last Saved: ' + currentTime.toLocaleTimeString();
-        
-        // Save notes to local storage
-        const textareas = document.querySelectorAll('textarea');
-        const notes = [];
-        textareas.forEach(textarea => {
-            notes.push({ text: textarea.value });
-        });
-        localStorage.setItem('notes', JSON.stringify(notes));
+        document.getElementById("time").textContent = `Last Fetch -> ${currentTime.getHours()} : ${currentTime.getMinutes()} : ${currentTime.getSeconds()}`;
+    };
+
+    const updateLocalStorage = () => {
+        localStorage.setItem("notes", JSON.stringify(noteModels));
+    };
+
+    updateTime();
+    updateLocalStorage();
+
+    setInterval(() => {
+        updateTime();
+        updateLocalStorage();
     }, 2000);
-}
+});
 
-function createNoteTextarea(text) {
-    const div = document.createElement('div');
-    
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    
-    const removeBtn = document.createElement('button');
-    removeBtn.textContent = 'Remove';
-    removeBtn.addEventListener('click', () => {
-        const notesContainer = document.getElementById('notes-container');
-        notesContainer.removeChild(div); // Remove the entire div, not just the textarea and removeBtn
+const createNoteModel = ({ bodyText }) => {
+    const noteModel = new NoteModel(bodyText);
+    noteModels.push(noteModel);
+    return noteModel;
+};
+
+const removeNoteModel = ({ bodyText }) => {
+    const noteIndex = noteModels.findIndex((noteModel) => noteModel.bodyText === bodyText);
+    if (noteIndex !== -1) {
+        noteModels.splice(noteIndex, 1);
+    }
+};
+
+for (const index in noteModels) {
+    const noteModel = noteModels[index];
+    noteModel.textarea = document.createElement("textarea");
+    noteModel.textarea.value = noteModel.bodyText;
+    noteModel.textarea.addEventListener("input", (e) => {
+        noteModel.bodyText = e.target.value;
     });
-    
-    div.appendChild(textarea);
-    div.appendChild(removeBtn);
-    
-    return div;
+
+    noteModel.removeButton = document.createElement("button");
+    noteModel.removeButton.innerText = noteModel.buttonText;
+    noteModel.removeButton.addEventListener("click", () => {
+        removeNoteModel({ bodyText: noteModel.bodyText });
+        container.remove();
+    });
+
+    const container = document.createElement("div");
+
+    container.appendChild(noteModel.textarea);
+    container.appendChild(noteModel.removeButton);
+    noteList.appendChild(container);
 }
 
-document.addEventListener('DOMContentLoaded', initWriterPage);
+const noteForm = document.getElementById("note-form");
+noteForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const noteText = document.getElementById("noteText");
+    const newNoteModel = createNoteModel({ bodyText: noteText.value });
+    noteText.value = "";
+
+    newNoteModel.textarea = document.createElement("textarea");
+    newNoteModel.textarea.value = newNoteModel.bodyText;
+    newNoteModel.textarea.addEventListener("input", (e) => {
+        newNoteModel.bodyText = e.target.value;
+    });
+
+    newNoteModel.removeButton = document.createElement("button");
+    newNoteModel.removeButton.innerText = newNoteModel.buttonText;
+    newNoteModel.removeButton.addEventListener("click", () => {
+        removeNoteModel({ bodyText: newNoteModel.bodyText });
+        container.remove();
+    });
+
+    const container = document.createElement("div");
+
+    container.appendChild(newNoteModel.textarea);
+    container.appendChild(newNoteModel.removeButton);
+    noteList.appendChild(container);
+});

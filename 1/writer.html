@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/writer.js"></script>
-    <title>Writer Page</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/writer.css">
+    <title>Writer</title>
 </head>
 <body>
-    <h1>Writer Page</h1>
-    <div id="notes-container">
-        <!-- Notes will be dynamically added here -->
-    </div>
-    <button id="add-button">Add Note</button>
-    <p>Last Saved: <span id="last-saved">N/A</span></p>
-    <a href="index.html">Back</a>
+    <div id="list-notes"></div>
+    <form id="note-form">
+        <input type="text" id="noteText" />
+        <button type="submit">Wooosh</button>
+    </form>
+    <p id="time">Last Fetch</p>
+    <a href='./index.html'>go back</a>
+<script src="js/writer.js"></script>
 </body>
 </html>
