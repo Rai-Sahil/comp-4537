@@ -1,10 +1,4 @@
 'use strict'
-function NoteModel(bodyText) {
-    this.bodyText = bodyText;
-    this.buttonText = "Remove Note";
-    this.textarea = null;
-    this.removeButton = null;
-}
 
 const noteModels = JSON.parse(localStorage.getItem("notes")) || [];
 
@@ -90,3 +84,10 @@ noteForm.addEventListener("submit", (e) => {
     container.appendChild(newNoteModel.removeButton);
     noteList.appendChild(container);
 });
+
+function NoteModel(bodyText) {
+    this.bodyText = bodyText;
+    this.buttonText = "Remove Note";
+    this.textarea = null;
+    this.removeButton = null;
+}
