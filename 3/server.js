@@ -42,6 +42,7 @@ const server = http.createServer((req, res) => {
             if (err) {
                 res.writeHead(500, { 'Content-Type': 'text/plain' });
                 res.end('Internal Server Error');
+                console.log(err);
                 return;
             }
 
