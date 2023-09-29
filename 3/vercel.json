@@ -7,9 +7,9 @@
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
+    { "src": "/", "dest": "/server.js" },
+    { "src": "/COMP4537/labs/3/getDate", "dest": "/server.js" },
+    { "src": "/COMP4537/labs/3/writeFile/**", "dest": "/server.js" },
+    { "src": "/COMP4537/labs/3/readFile/file.txt", "dest": "/server.js" }
   ]
 }
