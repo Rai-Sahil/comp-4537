@@ -41,8 +41,7 @@ const server = http.createServer((req, res) => {
         fs.appendFile(filePath, `${text}\n`, (err) => {
             if (err) {
                 res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end('Internal Server Error');
-                console.log(err);
+                res.end(err);
                 return;
             }
 
